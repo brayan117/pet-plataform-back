@@ -48,3 +48,9 @@ Thumbs.db
 
 # Archivos específicos del proyecto
 pet-plataform-back-*.json
+
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
