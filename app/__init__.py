@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 import os
 from .config import config
-from .config.firebase_config import init_firebase
 
 def create_app(config_name=None):
     """Crea y configura la aplicación Flask."""
@@ -18,16 +17,9 @@ def create_app(config_name=None):
     CORS(app)
     
     try:
-        # Inicializar Firebase
-        init_firebase()
-        
         # Registrar rutas
         from .routes import register_routes
         register_routes(app)
-        
-        # Configurar base de datos (si es necesario)
-        # from .models import db
-        # db.init_app(app)
         
         return app
         

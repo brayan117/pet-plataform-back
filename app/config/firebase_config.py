@@ -2,6 +2,10 @@ import os
 import firebase_admin
 from firebase_admin import credentials, firestore, auth
 from flask import current_app
+from dotenv import load_dotenv
+
+# Cargar variables de entorno
+load_dotenv()
 
 def init_firebase():
     """Inicializa la aplicación de Firebase con las credenciales."""
@@ -33,4 +37,26 @@ def init_firebase():
         
     except Exception as e:
         print(f"Error al inicializar Firebase: {e}")
+        raise
+
+def initialize_firebase():
+    """
+    Inicializa la conexión con Firebase
+    """
+    try:
+        # Obtener la ruta del archivo de credenciales
+        cred_path = os.getenv('FIREBASE_CREDENTIALS')
+        if not cred_path:
+            raise ValueError("FIREBASE_CREDENTIALS no está configurada en el archivo .env")
+
+        # Inicializar Firebase Admin SDK
+        cred = credentials.Certificate(cred_path)
+        firebase_admin.initialize_app(cred)
+        
+        # Obtener una instancia de Firestore
+        db = firestore.client()
+        
+        return db
+    except Exception as e:
+        print(f"Error al inicializar Firebase: {str(e)}")
         raise

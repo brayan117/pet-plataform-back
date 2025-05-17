@@ -12,6 +12,10 @@ class Config:
     # Configuración de Firebase
     FIREBASE_CREDENTIALS = os.getenv('FIREBASE_CREDENTIALS', 'pet-plataform-back-firebase-adminsdk-fbsvc-bb8c26602e.json')
     
+    # Configuración de The Dog API
+    DOG_API_KEY = os.getenv('DOG_API_KEY', '')
+    DOG_API_BASE_URL = 'https://api.thedogapi.com/v1'
+    
     # Otros ajustes de configuración pueden ir aquí
 
 class DevelopmentConfig(Config):

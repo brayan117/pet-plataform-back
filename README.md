@@ -1,6 +1,6 @@
 # 🐾 Pet Platform - Backend
 
-Backend para la plataforma de gestión de mascotas, desarrollado con Python, Flask y Firebase.
+Backend para la plataforma de gestión de mascotas, desarrollado con Python, FastAPI y Firebase.
 
 ## 🚀 Requisitos previos
 
@@ -10,6 +10,7 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
 - pip (gestor de paquetes de Python)
 - Git (para clonar el repositorio)
 - Cuenta de Firebase y archivo de credenciales de servicio
+- API Key de The Dog API (https://thedogapi.com/)
 
 ## 🛠️ Configuración del entorno
 
@@ -34,23 +35,20 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
    ```bash
    pip install -r requirements.txt
    ```
-   
-   Si el archivo requirements.txt no existe, instala las dependencias manualmente:
-   ```bash
-   pip install flask flask-cors python-dotenv firebase-admin
-   ```
 
 4. **Configuración de variables de entorno**
 
    - Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
      ```
      # Configuración de la aplicación
-     FLASK_ENV=development
-     FLASK_DEBUG=1
+     DEBUG=True
      SECRET_KEY=tu-clave-secreta-aqui
      
      # Configuración de Firebase
-     FIREBASE_CREDENTIALS=tu-archivo-credenciales.json
+     FIREBASE_CREDENTIALS=pet-plataform-back-firebase-adminsdk-fbsvc-bb8c26602e.json
+     
+     # Configuración de The Dog API
+     DOG_API_KEY=tu-api-key-aqui
      ```
 
 5. **Configuración de Firebase**
@@ -65,13 +63,13 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
 
 1. **Iniciar el servidor de desarrollo**
    ```bash
-   python run.py
+   uvicorn main:app --reload
    ```
 
 2. **Acceder a la API**
-   - La API estará disponible en `http://localhost:5000`
-   - Ruta de verificación de estado: `GET /health`
-   - Ruta principal: `GET /`
+   - La API estará disponible en `http://localhost:8000`
+   - Documentación Swagger UI: `http://localhost:8000/docs`
+   - Documentación ReDoc: `http://localhost:8000/redoc`
 
 ## 📁 Estructura del proyecto
 
@@ -80,36 +78,70 @@ pet-plataform-back/
 ├── .env                    # Variables de entorno
 ├── .gitignore              # Archivos ignorados por Git
 ├── requirements.txt        # Dependencias del proyecto
-├── run.py                 # Punto de entrada de la aplicación
+├── main.py                # Punto de entrada de la aplicación
 ├── app/
 │   ├── __init__.py       # Inicialización de la aplicación
 │   ├── config/           # Configuraciones
 │   │   ├── __init__.py
 │   │   └── firebase_config.py
-│   ├── routes.py         # Definición de rutas de la API
-│   └── services/         # Lógica de negocio
-│       └── firebase_service.py
-└── tu-archivo-credenciales.json  # Credenciales de Firebase
+│   └── models/           # Modelos de datos
+│       └── dog.py
+└── pet-plataform-back-firebase-adminsdk-fbsvc-bb8c26602e.json  # Credenciales de Firebase
 ```
 
 ## 🔒 Variables de entorno
 
 | Variable             | Descripción                                  | Valor por defecto                |
 |----------------------|----------------------------------------------|----------------------------------|
-| FLASK_ENV            | Entorno de ejecución (development/production) | development                      |
-| FLASK_DEBUG          | Modo depuración (1/0)                       | 1                                |
+| DEBUG                | Modo depuración (True/False)                 | True                             |
 | SECRET_KEY           | Clave secreta para la aplicación             |                                  |
 | FIREBASE_CREDENTIALS | Ruta al archivo de credenciales de Firebase | pet-plataform-back-...json       |
+| DOG_API_KEY          | API Key para The Dog API                     |                                  |
 
+
+
+
+
+## 🐕 API de Perros
+
+### Endpoints
+
+#### 1. Listar todas las razas de perros
+```http
+GET /razas/perros
+```
+
+**Respuesta:**
+```json
+{
+  "razas": [
+    {
+      "id": 1,
+      "nombre": "Affenpinscher",
+      "descripcion": "Small rodent hunting, lapdog",
+      "temperamento": "Stubborn, Curious, Playful, Adventurous, Active, Fun-loving",
+      "vida_promedio": "10 - 12 years",
+      "origen": "Germany, France",
+      "imagen": "https://cdn2.thedogapi.com/images/hd1iiHXjK.jpg"
+    },
+    // ... más razas
+  ]
+}
+```
+
+**Características:**
+- Devuelve todas las razas de perros disponibles en The Dog API
+- Incluye una imagen aleatoria para cada raza
+- Proporciona información detallada como temperamento, esperanza de vida y origen
+- No tiene límite en el número de razas devueltas
 
 ## 🔄 Despliegue
 
 Para entornos de producción, se recomienda:
 
-1. Configurar `FLASK_ENV=production`
-2. Establecer `FLASK_DEBUG=0`
-3. Configurar un servidor WSGI como Gunicorn o uWSGI
-4. Usar un servidor web como Nginx como proxy inverso
+1. Configurar `DEBUG=False`
+2. Configurar un servidor WSGI como Gunicorn o uWSGI
+3. Usar un servidor web como Nginx como proxy inverso
 
 ## 🤝 Contribución
 
@@ -125,4 +157,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) par
 
 ---
 
-Desarrollado con ❤️ por [Tu Nombre]
+Desarrollado con ❤️ por [Yeimer campo]
