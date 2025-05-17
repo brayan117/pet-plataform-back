@@ -3,14 +3,6 @@
 venv/
 ENV/
 
-# Archivos de entorno
-.env
-*.env
-
-# Archivos de credenciales
-*.json
-!firebase-credentials-example.json
-
 # Archivos de Python
 __pycache__/
 *.py[cod]
@@ -46,5 +38,3 @@ wheels/
 .DS_Store
 Thumbs.db
 
-# Archivos específicos del proyecto
-pet-plataform-back-*.json
