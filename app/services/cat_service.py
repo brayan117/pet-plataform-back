@@ -19,6 +19,22 @@ class CatService:
         return base_url
     
     @classmethod
+    def _format_breed_data(cls, breed_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Formatea los datos de la raza según el formato deseado."""
+        return {
+            'id': breed_data.get('id', ''),
+            'name': breed_data.get('name', ''),
+            'temperament': breed_data.get('temperament', ''),
+            'life_span': breed_data.get('life_span', ''),
+            'origin': breed_data.get('origin', ''),
+            'description': breed_data.get('description', ''),
+            'weight': breed_data.get('weight', {}),
+            'hairless': breed_data.get('hairless', 0),
+            'energy_level': breed_data.get('energy_level', 0),
+            'intelligence': breed_data.get('intelligence', 0)
+        }
+
+    @classmethod
     def get_all_breeds(cls) -> List[Dict[str, Any]]:
         """
         Obtiene todas las razas de gatos de The Cat API.
@@ -30,7 +46,11 @@ class CatService:
             base_url = cls._get_base_url()
             response = requests.get(f"{base_url}breeds")
             response.raise_for_status()  # Lanza una excepción para errores HTTP
-            return response.json()
+            
+            # Formatear la respuesta según el formato deseado
+            breeds = response.json()
+            return [cls._format_breed_data(breed) for breed in breeds]
+            
         except requests.exceptions.RequestException as e:
             current_app.logger.error(f"Error al obtener razas de gatos: {str(e)}")
             return []
@@ -44,13 +64,17 @@ class CatService:
             breed_id (str): El ID de la raza de gato
             
         Returns:
-            Dict[str, Any]: Información de la raza de gato
+            Dict[str, Any]: Información de la raza de gato en el formato deseado
         """
         try:
             base_url = cls._get_base_url()
             response = requests.get(f"{base_url}breeds/{breed_id}")
             response.raise_for_status()
-            return response.json()
+            
+            # Formatear la respuesta según el formato deseado
+            breed_data = response.json()
+            return cls._format_breed_data(breed_data)
+            
         except requests.exceptions.RequestException as e:
             current_app.logger.error(f"Error al obtener la raza {breed_id}: {str(e)}")
             return {}
