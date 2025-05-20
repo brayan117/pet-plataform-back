@@ -10,6 +10,7 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
 - pip (gestor de paquetes de Python)
 - Git (para clonar el repositorio)
 - Cuenta de Firebase y archivo de credenciales de servicio
+- Cuenta de Microsoft Azure para el despliegue
 
 ## 🛠️ Configuración del entorno
 
@@ -102,14 +103,71 @@ pet-plataform-back/
 | FIREBASE_CREDENTIALS | Ruta al archivo de credenciales de Firebase | pet-plataform-back-...json       |
 
 
-## 🔄 Despliegue
+## 🔄 Despliegue en Azure Web App
 
-Para entornos de producción, se recomienda:
+### Requisitos previos
 
-1. Configurar `FLASK_ENV=production`
-2. Establecer `FLASK_DEBUG=0`
-3. Configurar un servidor WSGI como Gunicorn o uWSGI
-4. Usar un servidor web como Nginx como proxy inverso
+- [CLI de Azure](https://docs.microsoft.com/cli/azure/install-azure-cli) instalado
+- Suscripción de Azure activa
+- Aplicación web creada en Azure App Service
+
+### Pasos para el despliegue
+
+1. **Configurar las variables de entorno en Azure Portal**
+   - Ve a tu App Service en Azure Portal
+   - En el menú de configuración, selecciona "Configuración" > "Configuración de la aplicación"
+   - Agrega las siguientes variables de configuración:
+     - `FIREBASE_CREDENTIALS_JSON`: El contenido completo de tu archivo de credenciales de Firebase (todo en una línea)
+     - `FLASK_ENV`: `production`
+     - `PYTHON_VERSION`: `3.9`
+     - `SCM_DO_BUILD_DURING_DEPLOYMENT`: `1`
+     - `WEBSITE_RUN_FROM_PACKAGE`: `0`
+
+2. **Configurar el runtime de Python**
+   - Asegúrate de que el archivo `runtime.txt` esté presente en la raíz del proyecto con el contenido: `python-3.9.13`
+
+3. **Desplegar usando Azure CLI**
+   ```bash
+   # Iniciar sesión en Azure
+   az login
+   
+   # Configurar el contexto de la suscripción (si es necesario)
+   az account set --subscription "NOMBRE_DE_TU_SUSCRIPCION"
+   
+   # Navegar al directorio del proyecto
+   cd ruta/a/tu/proyecto
+   
+   # Desplegar el código
+   az webapp up --sku F1 --name NOMBRE_DE_TU_APP --resource-group NOMBRE_DEL_GRUPO_DE_RECURSOS --runtime "PYTHON|3.9"
+   ```
+
+4. **Opcional: Configurar despliegue desde GitHub**
+   - En Azure Portal, ve a tu App Service
+   - Selecciona "Centro de implementación"
+   - Sigue las instrucciones para conectar tu repositorio de GitHub
+   - Configura la rama y la ruta si es necesario
+   - Guarda la configuración para activar el despliegue automático
+
+### Solución de problemas
+
+- **Error de tiempo de espera durante el despliegue**: Asegúrate de que el archivo `startup.cmd` esté configurado correctamente.
+- **Error de módulo no encontrado**: Verifica que todas las dependencias estén en `requirements.txt`.
+- **Error de credenciales de Firebase**: Asegúrate de que el JSON de credenciales esté correctamente formateado en una sola línea.
+
+### Monitoreo y registros
+
+- **Registros de aplicación**: En Azure Portal, ve a tu App Service > Registros de aplicación
+- **Streaming de registros**: Usa Azure CLI con `az webapp log tail --name NOMBRE_DE_TU_APP --resource-group NOMBRE_DEL_GRUPO_DE_RECURSOS`
+- **Métricas**: Monitorea el rendimiento en "Supervisión" > "Métricas"
+
+### Escalado
+
+- **Escalado vertical**: Aumenta el plan de servicio para obtener más recursos
+- **Escalado horizontal**: Configura el escalado automático en "Escalar horizontalmente"
+
+### Copias de seguridad
+
+Configura copias de seguridad automáticas en "Copias de seguridad" en el menú de configuración de tu App Service.
 
 ## 🤝 Contribución
 
