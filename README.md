@@ -38,7 +38,7 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
    
    Si el archivo requirements.txt no existe, instala las dependencias manualmente:
    ```bash
-   pip install flask flask-cors python-dotenv firebase-admin
+   pip install flask flask-cors python-dotenv firebase-admin waitress
    ```
 
 4. **Configuración de variables de entorno**
@@ -177,10 +177,6 @@ Configura copias de seguridad automáticas en "Copias de seguridad" en el menú 
 4. Haz push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
 ---
 
-Desarrollado con ❤️ por [Tu Nombre]
+Desarrollado por Brayan y yeimer
